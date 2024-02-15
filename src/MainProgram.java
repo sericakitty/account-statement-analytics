@@ -11,7 +11,7 @@ public class MainProgram {
   static CategoryTransactionsRegister categoryTransactionsRegister = new CategoryTransactionsRegister();
   static Scanner reader = new Scanner(System.in);
   static File accountStatementFile = new File("AccountStatement.csv");
-  static File titlesFile = new File("CategoryKeywords.csv");
+  static File categoryKeywordsFile = new File("CategoryKeywords.csv");
   static DecimalFormat df = new DecimalFormat("0.00");
   static int terminalWidth = 25;
 
@@ -147,7 +147,7 @@ public class MainProgram {
       }
     }
     System.out.println();
-    System.out.println("Enter keyword name (empty to stop)\n(hint: the closer the keyword matches\nthe title on the account statement,\nthe more likely it is to be categorized here): ");
+    System.out.println("Enter keyword name (empty to stop)\n(hint: the closer the keyword matches\nthe title on the transaction,\nthe more likely it is to be categorized here): ");
     while (true) {
       
       String keyword = reader.nextLine();
@@ -244,12 +244,12 @@ public class MainProgram {
     PrintWriter fileWriter = null;
     try {
       // write to csv file
-      fileWriter = new PrintWriter(titlesFile);
+      fileWriter = new PrintWriter(categoryKeywordsFile);
 
       ArrayList<String> categoryKeys = new ArrayList<String>(categoryKeywordsRegister.getCategoryKeywords().keySet());
       categoryKeys.sort(String.CASE_INSENSITIVE_ORDER);
 
-      fileWriter.println("Category:Titles;");
+      fileWriter.println("Category:Keywords;");
       
       for (String category : categoryKeys) {
         fileWriter.print(category.substring(0, 1).toUpperCase() + category.substring(1) + ":");
@@ -318,20 +318,20 @@ public class MainProgram {
   }
 
   /*
-   * This method reads categories and keywords from Titles.csv file and
+   * This method reads categories and keywords from CategoryKeywords csv file and
    * adds them to categoryKeywordsRegister.
-   * The structure of the Titles.csv file is as follows:
+   * The structure of the csv file is as follows:
    * Category contains the word to which the keywords are related.
-   * Keywords are comma-separated keywords related to the titles in the account statement.
+   * Keywords are comma-separated keywords related to the title of transaction in the account statement file.
    */
-  public static void readTitlesFromCsvFile() throws FileNotFoundException {
+  public static void readCategoriesAndKeywordsFromCsvFile() throws FileNotFoundException {
     
 
     Scanner fileReader = null;
     
     try {
       
-      fileReader = new Scanner(titlesFile);
+      fileReader = new Scanner(categoryKeywordsFile);
       String line = fileReader.nextLine();
       
       while (fileReader.hasNextLine()) {
@@ -365,7 +365,10 @@ public class MainProgram {
   
   public static void main(String[] args) throws InterruptedException, FileNotFoundException {
     System.out.println("Welcome to account statement analytics");
-    readTitlesFromCsvFile();
+    System.out.println("This program helps you to categorize your account statement transactions");
+    System.out.println("and to get a sum for each category");
+    System.out.println("-------------------------------------------------");
+    readCategoriesAndKeywordsFromCsvFile();
     fetchAllData();
     askUser();
     reader.close();
