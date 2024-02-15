@@ -84,6 +84,9 @@ public class CategoryKeywordsRegister {
    */
   public ArrayList<String> getCategories(String keyword) {
     ArrayList<String> suitableCategories = new ArrayList<>();
+    ArrayList<String> exactMatchCategories = new ArrayList<>();
+    ArrayList<String> commonWordCategories = new ArrayList<>();
+
     if (keyword == null) {
         return suitableCategories;
     }
@@ -101,7 +104,7 @@ public class CategoryKeywordsRegister {
 
             // If keyword exactly matches the category's title, add the category to the list
             if (keyword.equals(title)) {
-                suitableCategories.add(category);
+                exactMatchCategories.add(category);
                 // continue to the next category, because the exact match can fit into multiple categories
                 continue;
 
@@ -111,18 +114,28 @@ public class CategoryKeywordsRegister {
               if (commonWordCount > mostCommonWords) {
                   mostCommonWords = commonWordCount;
                   bestCategory = category; // set the best category if the number of common words is higher than the previous best
-              }
+              } else if (commonWordCount == mostCommonWords) {
+                  commonWordCategories.add(category); // add the category to the list of suitable categories if the number of common words is the same as the previous best
+              } 
 
           }
 
         }
     }
     
-    // if suitableCategories is empty i.e., does not contain an exact match category, but bestCategory exists, add it to the list
-    if (suitableCategories.isEmpty() && bestCategory != null) {
-        suitableCategories.add(bestCategory);
+    // add the exact match categories to the list of suitable categories
+    suitableCategories.addAll(exactMatchCategories);
+    
+    // add the common word categories to the list of suitable categories if it is not empty
+    if (!commonWordCategories.isEmpty()) {
+      suitableCategories.addAll(commonWordCategories);
     }
 
+    // add the best category to the list of suitable categories if it is not null
+    if (bestCategory != null) {
+        suitableCategories.add(bestCategory);
+    }
+    
     return suitableCategories;
 }
 

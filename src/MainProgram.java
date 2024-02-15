@@ -223,7 +223,6 @@ public class MainProgram {
       if (!categoryKeywordsRegister.doesCategoryExist(category)) {
         System.out.println("Category does not exist");
       } else {
-        
         System.out.println("Total sum for category " + category + ": " + df.format(categoryTransactionsRegister.getCategoryTransactionsSum(category)));
       }
 
@@ -301,7 +300,6 @@ public class MainProgram {
         double amountLineDouble = Double.parseDouble(totalAmountString);
 
         ArrayList<String> categoryList = categoryKeywordsRegister.getCategories(title);
-        
         for (String category : categoryList) {
           categoryTransactionsRegister.setTransaction(category, amountLineDouble);
         }
